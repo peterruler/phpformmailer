@@ -1,0 +1,21 @@
+{
+    "name": "keepitnative/phpformmailer",
+    "description": "A php file uploader and mailer script",
+    "authors": [
+        {
+            "name": "peter",
+            "email": "7starch@gmail.com"
+        }
+    ],
+    "require": {
+        "phpunit/phpunit": "4.3.5",
+        "phpunit/phpunit-skeleton-generator": "2.0.1",
+        "phpunit/php-code-coverage": "2.0.11",
+        "ezyang/htmlpurifier": "4.6.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "ch\\keepitnative\\formmailer\\src\\": "src/"
+        }
+    }
+}

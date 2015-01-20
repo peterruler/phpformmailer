@@ -1,0 +1,14 @@
+/config/config.ini
+logs
+composer.phar
+/FirePHPCore
+.idea
+tests/gen
+tests/run.sh
+tests/run-w.sh
+tests/skel-gen-w.sh
+tests/skel-gen-l.sh
+/tmp
+/uploads/
+/vendor
+werk*
