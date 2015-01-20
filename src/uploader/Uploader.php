@@ -110,12 +110,18 @@ class Uploader implements UploaderInterface
         return static::$isSuccess;
     }
 
+	/**
+     * @return ConfigRegistry
+     */
+    public function getRegistry() {
+        return ConfigRegistry::getInstance();
+    }
     /**
      * @return array
      */
     public function getAllowedFileTypes()
     {
-        $settings = ConfigRegistry::getInstance();
+        $settings = $this->getRegistry();
         return explode(',', $settings->get('config')['erlaubteEndungen']);
     }
 
@@ -139,7 +145,7 @@ class Uploader implements UploaderInterface
      * @return int
      */
     public function getMimeType() {
-        $settings = ConfigRegistry::getInstance();
+        $settings = $this->getRegistry();
         $imgName = $settings->get('data')['sujet']['name'];
         $info   = explode('.',$imgName);
         $type   = str_replace(['-','_','.','$'],'',trim($info[1]));
@@ -153,7 +159,7 @@ class Uploader implements UploaderInterface
     {
         $err = static::$errors;
 
-        $settings = ConfigRegistry::getInstance();
+        $settings = $this->getRegistry();
 
         $imgName = '';
         $imgName = $settings->get('data')['sujet']['tmp_name'];
@@ -189,7 +195,7 @@ class Uploader implements UploaderInterface
      */
     public function getUploadFileFullPath()
     {
-        $settings = ConfigRegistry::getInstance();
+        $settings = $this->getRegistry();
         $uploadDir = $settings->get('config')['zielverzeichnis'];
         $uploadDir = substr($uploadDir,0,count($uploadDir)-1);
         $imgName = '';
@@ -201,7 +207,7 @@ class Uploader implements UploaderInterface
      * @return bool
      */
     public function checkIfFileNameIsValid() {
-        $settings = ConfigRegistry::getInstance();
+        $settings = $this->getRegistry();
         if(empty(basename($settings->get('data')['sujet']['tmp_name']))) {
             return false;
         } else {
@@ -213,7 +219,7 @@ class Uploader implements UploaderInterface
      * @return bool
      */
     public function checkMaxUploadFileSize() {
-        $settings = ConfigRegistry::getInstance();
+        $settings = $this->getRegistry();
         $err = static::$errors;
         if ($settings->get('data')['sujet']['size'] >= $settings->get('config')['maximaleUploadGroesse']) {
             //check max size in MB
@@ -228,7 +234,7 @@ class Uploader implements UploaderInterface
      * @return bool
      */
     public function createUploadDir() {
-        $settings = ConfigRegistry::getInstance();
+        $settings = $this->getRegistry();
         $err = static::$errors;
         $uploadDir = $settings->get('config')['zielverzeichnis'];
         if ((!is_dir($uploadDir))) {
@@ -246,7 +252,7 @@ class Uploader implements UploaderInterface
      * @return bool
      */
     public function checkWritableUploadDir() {
-        $settings = ConfigRegistry::getInstance();
+        $settings = $this->getRegistry();
         $err = static::$errors;
         $uploadDir = $settings->get('config')['zielverzeichnis'];
         if (!is_writable($uploadDir)) {
@@ -261,8 +267,7 @@ class Uploader implements UploaderInterface
      * @return bool
      */
     public function checkFileBaseName() {
-
-        $settings = ConfigRegistry::getInstance();
+        $settings = $this->getRegistry();
         $err = static::$errors;
         $ext = $this->getMimeType();
         $erlaubteEndungen = $this->getAllowedFileTypes();
@@ -280,7 +285,7 @@ class Uploader implements UploaderInterface
      * @return mixed
      */
     public function createUniqueFileName() {
-        $settings = ConfigRegistry::getInstance();
+        $settings = $this->getRegistry();
         $uploadDir = $settings->get('config')['zielverzeichnis'];
         $fileName = explode('.',$settings->get('data')['sujet']['name'])[0];
         $time = str_replace(['.','_',' '],'-',microtime(true));
@@ -296,7 +301,7 @@ class Uploader implements UploaderInterface
 
         $err = static::$errors;
         //GET CONFIG
-        $settings = ConfigRegistry::getInstance();
+        $settings = $this->getRegistry();
         //SECURITY CHECK is_uploaded_file
         $attachment = $this->createUniqueFileName();
         //CHECK IF IMG NAME IS NOT EMPTY AND
@@ -359,6 +364,7 @@ class Uploader implements UploaderInterface
         //check basename security
         if (!$this->checkFileBaseName()) {
             //var_dump(5);die;
+            return;
         }
 
         //START UPLOADING IMAGE
